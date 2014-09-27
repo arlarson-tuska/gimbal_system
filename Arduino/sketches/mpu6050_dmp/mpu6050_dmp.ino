@@ -203,7 +203,8 @@ void calibrate_sensors() {
 PID SETUP 
 =======================================================================*/ 
 double Setpoint[3], Input[3], Output[3]; // Output = motor angle/speed, Input = IMU Angle, Setpoint = 0deg + offset degrees
-PID myPID_ROLL(&Input[0], &Output[0], &Setpoint[0],2,5,1, DIRECT); // initiliaze PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, Direction)
+PID myPID_ROLL(&Input[2], &Output[2], &Setpoint[2],1,0.5,0 , DIRECT); // initiliaze PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, Direction)
+
 
 // ================================================================
 // ===                      INITIAL SETUP                       ===
@@ -306,6 +307,7 @@ void setup() {
     set_last_read_angle_data(millis(), 0, 0, 0, 0, 0, 0);
 
     //turn the PID on
+    myPID_ROLL.SetOutputLimits(-90, 90);
   	myPID_ROLL.SetMode(AUTOMATIC);
 }
 
@@ -404,26 +406,37 @@ void loop() {
   
        // Output complementary data and DMP data to the serial port.  The signs on the data needed to be
        // fudged to get the angle direction correct.
-       Serial.print("CMP:");
+       /*Serial.print("CMP:");
        Serial.print(get_last_x_angle(), 2);
        Serial.print(":");
        Serial.print(get_last_y_angle(), 2);
        Serial.print(":");
        Serial.println(-get_last_z_angle(), 2);
-       Serial.print("DMP:");
+       */
+       //Serial.print("DMP:");
        Serial.print(ypr[2]*RADIANS_TO_DEGREES, 2);
-       Serial.print(":");
-       Serial.print(-ypr[1]*RADIANS_TO_DEGREES, 2);
-       Serial.print(":");
-       Serial.println(ypr[0]*RADIANS_TO_DEGREES, 2);
+       Serial.print("\t\t\t");
+       Serial.println(Output[2]);
+       //Input[2] = -ypr[2]*RADIANS_TO_DEGREES;
+       // myPID_ROLL.Compute();
+
+
+       //Serial.print(":");
+       //Serial.print(-ypr[1]*RADIANS_TO_DEGREES, 2);
+       //Serial.print(":");
+       //Serial.println(ypr[0]*RADIANS_TO_DEGREES, 2);
 
         // blink LED to indicate activity
         blinkState = !blinkState;
+        
         digitalWrite(LED_PIN, blinkState);
-
-        Input[0] = ypr[0]*RADIANS_TO_DEGREES;
+        
+        Input[2] = ypr[2]*RADIANS_TO_DEGREES;
 
         myPID_ROLL.Compute();
-        first.write(Output[0]);
+        first.write(90 -Output[2]);
+        
+
+       // first.write(90  ypr[2]*RADIANS_TO_DEGREES);
     }
 }
