@@ -66,6 +66,7 @@ void loop() {
             Serial.print(time[i],DEC);
             Serial.print("\t");
         }
+        /*
         Serial.print(burp, DEC);
         Serial.println();
         Serial.print("\t");
@@ -74,7 +75,9 @@ void loop() {
         Serial.print(Timer1.clockSelectBits, BIN);
         Serial.print("\t");
         Serial.println(ICR1, DEC);
+        */
     }
+
     cmd=0;
     switch (state)
     {
@@ -94,6 +97,22 @@ void loop() {
             //do nothing
             break;*/
     }
+/*  //Led Output testing for fun.
+    int ledpwm = map(time[0], 999, 2010, 0, 2048);
+    if(ledpwm < 0)
+        ledpwm = 0;
+    else if(ledpwm > 2048)
+        ledpwm = 2048;
+
+    int ledpwm2 = map(time[1], 999, 2010, 0, 4096);
+    if(ledpwm2 < 0)
+        ledpwm2 = 0;
+    else if(ledpwm2 > 2048)
+        ledpwm2 = 2048;
+
+    analogWrite(9, ledpwm);
+    analogWrite(10, ledpwm2);
+*/
 }
 
 void rise()        //on the rising edge of the currently intresting pin
