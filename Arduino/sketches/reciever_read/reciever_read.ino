@@ -68,12 +68,12 @@ void loop() {
         }
         Serial.print(burp, DEC);
         Serial.println();
-/*      Serial.print("\t");
+        Serial.print("\t");
         Serial.print(clockCyclesToMicroseconds(Timer1.pwmPeriod), DEC);
         Serial.print("\t");
         Serial.print(Timer1.clockSelectBits, BIN);
         Serial.print("\t");
-        Serial.println(ICR1, DEC);*/
+        Serial.println(ICR1, DEC);
     }
     cmd=0;
     switch (state)
