@@ -38,6 +38,7 @@ THE SOFTWARE.
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
 #include "MPU6050.h"
+#include <PID_v1.h>
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -55,8 +56,6 @@ MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
-
-
 // uncomment "OUTPUT_READABLE_ACCELGYRO" if you want to see a tab-separated
 // list of the accel X/Y/Z and then gyro X/Y/Z values in decimal. Easy to read,
 // not so easy to parse, and slow(er) over UART.
@@ -71,6 +70,12 @@ int16_t gx, gy, gz;
 
 #define LED_PIN 13
 bool blinkState = false;
+
+/* ====================================================================
+PID SETUP 
+=======================================================================*/ 
+double Setpoint, Input, Output; // Output = motor angle/speed, Input = IMU Angle, Setpoint = 0deg + offset degrees
+PID myPID(&Input, &Output, &Setpoint,2,5,1, DIRECT); // initiliaze PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, Direction)
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -118,6 +123,9 @@ void setup() {
 
     // configure Arduino LED for
     pinMode(LED_PIN, OUTPUT);
+
+    //turn the PID on
+  myPID.SetMode(AUTOMATIC);
 }
 
 void loop() {
